@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo-extra
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "3500:3500"
+    environment:
+      MONGO_CONN_STR: mongodb://mongo:27017/appdb
+      USE_DB_AUTH: "false"
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
+#  - IGNORE -   
