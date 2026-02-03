@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   backend:
-    build: ./backend
+    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-backend:v1
     container_name: backend
     env_file:
       - /opt/stan/.env
@@ -12,10 +10,12 @@ services:
       - mongo-extra
 
   frontend:
-    build: ./frontend
+    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-frontend:v1
     container_name: frontend
     expose:
       - "80"
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:alpine
