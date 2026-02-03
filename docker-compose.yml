@@ -1,6 +1,6 @@
 services:
   backend:
-    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-backend:v1
+    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-backend:v1
     container_name: backend
     env_file:
       - /opt/stan/.env
@@ -10,7 +10,7 @@ services:
       - mongo-extra
 
   frontend:
-    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-frontend:v1
+    image: 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-frontend:v1
     container_name: frontend
     expose:
       - "80"
