@@ -1,0 +1,43 @@
+name: CI - Build and Push Images to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::969759464709:role/github-actions-ecr
+          aws-region: eu-north-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push BACKEND image
+        run: |
+          docker build -t backend ./backend
+          docker tag backend:latest \
+            969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-backend:v2
+          docker push \
+            969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-backend:v2
+
+      - name: Build, tag, and push FRONTEND image
+        run: |
+          docker build -t frontend ./frontend
+          docker tag frontend:latest \
+            969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-frontend:v2
+          docker push \
+            969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastucture-frontend:v2
