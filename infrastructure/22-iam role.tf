@@ -55,3 +55,28 @@ resource "aws_iam_role_policy_attachment" "ec2_ecr_access" {
   role       = aws_iam_role.ec2_ssm_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+
+
+
+resource "aws_iam_policy" "ssm_image_version_access" {
+  name = "ec2-ssm-image-version-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter"
+        ]
+        Resource = "arn:aws:ssm:eu-north-1:969759464709:parameter/production/app/image-version"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_ssm_image_version_attach" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ssm_image_version_access.arn
+}

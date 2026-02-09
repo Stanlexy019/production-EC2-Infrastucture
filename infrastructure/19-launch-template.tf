@@ -54,8 +54,24 @@ resource "aws_launch_template" "app_lt" {
     
     #log in to ECR and pull the Docker image
     aws ecr get-login-password --region eu-north-1 | sudo docker login --username AWS --password-stdin 969759464709.dkr.ecr.eu-north-1.amazonaws.com
+
+    # Pull backend image (example v2)
+ 
+    docker pull 969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-backend:v2
+
+    # Run container
+    docker run -d \
+      --env-file /opt/stan/.env \
+      -p 3500:3500 \
+      --restart always \
+      --name backend \
+      969759464709.dkr.ecr.eu-north-1.amazonaws.com/production-ec2-infrastructure-backend:v2
+
   EOF
+
   )
+
+
 
   tag_specifications {
     resource_type = "instance"
